@@ -100,7 +100,7 @@ public final class Couplings {
 
   public static void use(final BlockState state, final BlockState other, final World world, final Hand hand, final PlayerEntity player, final BlockHitResult origin, final BlockPos offset, final boolean usageResult) {
     final BlockHitResult target = new BlockHitResult(origin.getPos(), origin.getSide(), offset, false);
-    if (usageResult != other.activate(world, player, hand, target)) {
+    if (usageResult != (other.onUse(world, player, hand, target).isAccepted())) {
       final String result1 = toString(world, player, hand, state, origin, usageResult);
       final String result2 = toString(world, player, hand, other, target, usageResult);
       if (DEVELOPMENT) {
@@ -122,6 +122,12 @@ public final class Couplings {
 
     private static Options instance = DEFAULT;
 
+    public Options(boolean ignoreSneaking, int couplingRange, Features enabledFeatures){
+      this.couplingRange = couplingRange;
+      this.enabledFeatures = enabledFeatures;
+      this.ignoreSneaking = ignoreSneaking;
+    }
+
     @SerializedName("ignore_sneaking")
     private final boolean ignoreSneaking;
 
@@ -130,6 +136,18 @@ public final class Couplings {
 
     @SerializedName("enabled_features")
     private final Features enabledFeatures;
+
+    public boolean ignoreSneaking(){
+      return ignoreSneaking;
+    }
+
+    public int couplingRange(){
+      return couplingRange;
+    }
+
+    public Features enabledFeatures(){
+      return enabledFeatures;
+    }
 
     @Nullable
     private static Options fromJson(final FileReader reader) {
@@ -151,6 +169,12 @@ public final class Couplings {
     private static final class Features {
       private static final Features DEFAULT = new Features(true, true, true);
 
+      public Features(boolean doors, boolean fenceGates, boolean trapdoors){
+        areDoorsEnabled = doors;
+        areFenceGatesEnabled = fenceGates;
+        areTrapdoorsEnabled = trapdoors;
+      }
+
       @SerializedName("doors")
       private final boolean areDoorsEnabled;
 
@@ -159,6 +183,18 @@ public final class Couplings {
 
       @SerializedName("trapdoors")
       private final boolean areTrapdoorsEnabled;
+
+      public boolean areDoorsEnabled(){
+        return areDoorsEnabled;
+      }
+
+      public boolean areFenceGatesEnabled(){
+        return areFenceGatesEnabled;
+      }
+
+      public boolean areTrapdoorsEnabled(){
+        return areTrapdoorsEnabled;
+      }
     }
   }
 }

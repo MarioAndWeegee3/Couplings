@@ -20,6 +20,7 @@ import io.github.insomniakitten.couplings.hook.FenceGateHooks;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FenceGateBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -33,8 +34,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 abstract class FenceGateMixin {
   private FenceGateMixin() {}
 
-  @Inject(method = "activate", at = @At("RETURN"))
-  private void couplings$use(final BlockState state, final World world, final BlockPos pos, final PlayerEntity player, final Hand hand, final BlockHitResult hit, final CallbackInfoReturnable<Boolean> cir) {
-    FenceGateHooks.usageCallback(state, world, pos, player, hand, hit, cir.getReturnValueZ());
+  @Inject(method = "onUse", at = @At("RETURN"))
+  private void couplings$use(final BlockState state, final World world, final BlockPos pos, final PlayerEntity player, final Hand hand, final BlockHitResult hit, final CallbackInfoReturnable<ActionResult> cir) {
+    FenceGateHooks.usageCallback(state, world, pos, player, hand, hit, cir.getReturnValue().isAccepted());
   }
 }

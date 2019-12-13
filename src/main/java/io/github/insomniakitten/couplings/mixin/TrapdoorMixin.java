@@ -20,6 +20,7 @@ import io.github.insomniakitten.couplings.hook.TrapdoorHooks;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TrapdoorBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -33,8 +34,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 abstract class TrapdoorMixin {
   private TrapdoorMixin() {}
 
-  @Inject(method = "activate", at = @At(value = "RETURN", ordinal = 1), allow = 1)
-  private void couplings$use(final BlockState state, final World world, final BlockPos pos, final PlayerEntity player, final Hand hand, final BlockHitResult hit, final CallbackInfoReturnable<Boolean> cir) {
-    TrapdoorHooks.usageCallback(state, world, pos, player, hand, hit, cir.getReturnValueZ());
+  @Inject(method = "onUse", at = @At(value = "RETURN", ordinal = 1), allow = 1)
+  private void couplings$use(final BlockState state, final World world, final BlockPos pos, final PlayerEntity player, final Hand hand, final BlockHitResult hit, final CallbackInfoReturnable<ActionResult> cir) {
+    TrapdoorHooks.usageCallback(state, world, pos, player, hand, hit, cir.getReturnValue().isAccepted());
   }
 }

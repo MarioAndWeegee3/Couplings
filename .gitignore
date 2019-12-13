@@ -14,6 +14,9 @@ eclipse/
 *.iws
 out/
 
+# vscode
+.vscode/
+
 # gradle
 .gradle/
 build/

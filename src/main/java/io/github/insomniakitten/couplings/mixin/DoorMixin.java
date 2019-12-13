@@ -21,6 +21,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -37,9 +38,9 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 abstract class DoorMixin {
   private DoorMixin() {}
 
-  @Inject(method = "activate", at = @At(value = "RETURN", ordinal = 1), allow = 1)
-  private void couplings$use(final BlockState state, final World world, final BlockPos pos, final PlayerEntity player, final Hand hand, final BlockHitResult hit, final CallbackInfoReturnable<Boolean> cir) {
-    DoorHooks.usageCallback(state, world, pos, player, hand, hit, cir.getReturnValueZ());
+  @Inject(method = "onUse", at = @At(value = "RETURN", ordinal = 1), allow = 1)
+  private void couplings$use(final BlockState state, final World world, final BlockPos pos, final PlayerEntity player, final Hand hand, final BlockHitResult hit, final CallbackInfoReturnable<ActionResult> cir) {
+    DoorHooks.usageCallback(state, world, pos, player, hand, hit, cir.getReturnValue().isAccepted());
   }
 
   @Inject(method = "setOpen", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/DoorBlock;playOpenCloseSound(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Z)V", shift = Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
